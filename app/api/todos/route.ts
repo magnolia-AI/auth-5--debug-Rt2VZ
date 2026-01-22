@@ -39,7 +39,7 @@ export async function POST(request: Request) {
     const newTodo = await db
       .insert(todos)
       .values({
-        id: crypto.randomUUID(),
+        id: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
         text,
         userId: sessionData.user.id,
       })

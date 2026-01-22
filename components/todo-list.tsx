@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Trash2, Loader2, Plus } from 'lucide-react';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { type Todo } from '@/lib/schema';
 
 export function TodoList() {
@@ -13,6 +13,7 @@ export function TodoList() {
   const [newTodoText, setNewTodoText] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     fetchTodos();
@@ -25,7 +26,11 @@ export function TodoList() {
       const data = await res.json();
       setTodos(data);
     } catch (error) {
-      toast.error('Could not load todos');
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Could not load todos",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -46,9 +51,16 @@ export function TodoList() {
       const newTodo = await res.json();
       setTodos([...todos, newTodo]);
       setNewTodoText('');
-      toast.success('Todo added');
+      toast({
+        title: "Success",
+        description: "Todo added",
+      });
     } catch (error) {
-      toast.error('Could not add todo');
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Could not add todo",
+      });
     } finally {
       setIsAdding(false);
     }
@@ -65,7 +77,11 @@ export function TodoList() {
       const updated = await res.json();
       setTodos(todos.map((t) => (t.id === id ? updated : t)));
     } catch (error) {
-      toast.error('Could not update todo');
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Could not update todo",
+      });
     }
   }
 
@@ -76,9 +92,16 @@ export function TodoList() {
       });
       if (!res.ok) throw new Error('Failed to delete todo');
       setTodos(todos.filter((t) => t.id !== id));
-      toast.success('Todo deleted');
+      toast({
+        title: "Success",
+        description: "Todo deleted",
+      });
     } catch (error) {
-      toast.error('Could not delete todo');
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Could not delete todo",
+      });
     }
   }
 
